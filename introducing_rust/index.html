@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+	font-family: 'Yanone Kaffeesatz';
+	font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introducing Rust
+
+---
+
+# An overview
+
+1. Why Rust
+2. Memory safety with borrowing
+3. Result and Option types
+4. Pattern matching
+5. All the other cool stuff
+
+---
+
+# Why Rust?
+
+---
+
+*Rust* is a systems programming language that runs blazingly fast,
+prevents nearly all segfaults, and guarantees thread safety.
+
+---
+
+Very expressive, like in some functional languages
+
+---
+
+Zero cost abstraction
+
+---
+
+Has no garbage collection
+
+---
+
+Yet guarantees memory safety
+
+---
+
+Sure, concurrency is fine, thanks for asking
+
+---
+
+* No dangling pointers
+* No garbage collection
+* Zero cost abstraction
+* Very expressive
+* Strong base for stronger concurrency
+
+---
+
+# Memory safety with borrowing
+
+---
+
+Memory management was costly one way or another
+
+---
+
+Borrowing is like lending a (digital) book*
+
+* With some extras
+
+---
+
+# Borrowing in a nutshell:
+* Every pointer has one owner
+* A pointer can be borrowed read-only by many readers
+* A pointer can be borrowed mutably only once
+* A pointer can be moved
+
+It's by far the most important and hardest concept in Rust!
+
+---
+
+# Moving and copying
+```rust
+fn my_func(a: String) -> String {
+  let x = “abc” + &a;
+  x.to_string()
+} // x is dropped here
+
+fn main() {
+  let z = {
+    let y = “d”.to_string();
+    my_func(y) // my_func now owner of y
+    // let b = y panics!
+  }  // y is dropped here
+  println!(“{}”, z);
+}
+```
+
+---
+
+# Borrowing
+```rust
+fn my_func(a: &str) -> String {
+  let x = “abc” + a;
+  x.to_string()
+}
+fn main() {
+  let x = “d”.to_string();
+  my_func(&x);
+  let y = &x; // Sure!
+  // let y = x; Panic!
+}
+```
+
+---
+
+# Borrowing in a nutshell:
+* Every pointer has one owner
+* A pointer can be borrowed read-only by many readers
+* A pointer can be borrowed mutably only once
+* A pointer can be moved
+
+---
+
+Let's look at some more code!
+
+```rust
+// Ruby style iterators
+(1..100).iter().map(|i| i * 2).collect();
+// Immutable by default
+let x = 1;
+// x = x + 1 panic!
+let mut y = 1;
+y = y + 1
+
+// Error and Option types
+error_happy_function -> Result<value_type, error_type>
+gamble -> Option<value_type>
+```
+
+---
+
+# MONADS!
+
+---
+
+Result and Option are used in Rust for exception and nil handling
+
+---
+
+# Using an Option
+
+```rust
+fn first_room() -> Option<HotelRoom> {
+  if hotel_rooms_left() {
+    Some(pop_hotel_room())
+  } else {
+    None
+  }
+}
+```
+
+---
+
+# Using a Result with pattern matching
+
+```rust
+fn divide(num: f64, denom: f64) -> Result<f64, &str> {
+  match denom {
+    0.0 => Error(“Division by zero”),
+    _   => Ok(num / denom)
+  }
+}
+```
+
+---
+
+Results and Option often form the core of your code. Many tools to make this super
+elegant!
+
+---
+
+# Couple more cool things
+
+* Because of borrowing, threads are memory safe
+* Rust is compatible with any FFI library
+* No lightweight threads (yet), but many solid concurrency primitives
+
+---
+
+Biggest rust project is Servo
+
+---
+
+![Servo performance](./servo.jpe)
+
+---
+
+# Thank you!
+
+* Check out the free Rust book https://doc.rust-lang.org/stable/book/
+* Rust meetups are held every couple months
+* We are always interested in speakers and sponsors!
+
+Timon Vonk (@timonvonk / github.com/timonv)
+CTO @ Tolq
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+var slideshow = remark.create();
+    </script>
+  </body>
+</html>
+}
