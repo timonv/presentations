@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
+    <title>Introducing Rust</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -35,34 +35,51 @@ class: center, middle
 
 ---
 
+class: center, middle
+
 # Why Rust?
 
 ---
 
-*Rust* is a systems programming language that runs blazingly fast,
-prevents nearly all segfaults, and guarantees thread safety.
+class: center, middle
+
+# *Rust* is a systems programming language that runs blazingly fast, prevents nearly all segfaults, and guarantees thread safety.
 
 ---
 
-Very expressive, like in some functional languages
+class: center, middle
+
+# Very expressive, like in some functional languages
 
 ---
 
-Zero cost abstraction
+class: center, middle
+
+# Zero cost abstraction
 
 ---
 
-Has no garbage collection
+class: center, middle
+
+# Has no garbage collection
 
 ---
 
-Yet guarantees memory safety
+class: center, middle
+
+# Yet guarantees memory safety
 
 ---
 
-Sure, concurrency is fine, thanks for asking
+class: center, middle
+
+# Sure, concurrency is fine, thanks for asking
 
 ---
+
+class: middle
+
+# So in short
 
 * No dangling pointers
 * No garbage collection
@@ -72,15 +89,21 @@ Sure, concurrency is fine, thanks for asking
 
 ---
 
+class: center, middle
+
 # Memory safety with borrowing
 
 ---
 
-Memory management was costly one way or another
+class: center, middle
+
+# Memory management was costly one way or another
 
 ---
 
-Borrowing is like lending a (digital) book*
+class: center, middle
+
+# Borrowing is like lending a (digital) book*
 
 * With some extras
 
@@ -99,17 +122,17 @@ It's by far the most important and hardest concept in Rust!
 # Moving and copying
 ```rust
 fn my_func(a: String) -> String {
-  let x = “abc” + &a;
+  let x = "abc".to_string() + &a;
   x.to_string()
 } // x is dropped here
 
 fn main() {
   let z = {
-    let y = “d”.to_string();
+    let y = "d".to_string();
     my_func(y) // my_func now owner of y
     // let b = y panics!
-  }  // y is dropped here
-  println!(“{}”, z);
+  };  // y is dropped here
+  println!("{}", z); // abcd
 }
 ```
 
@@ -118,15 +141,16 @@ fn main() {
 # Borrowing
 ```rust
 fn my_func(a: &str) -> String {
-  let x = “abc” + a;
+  let x = "abc".to_string() + a;
   x.to_string()
 }
+
 fn main() {
-  let x = “d”.to_string();
+  let x = "d".to_string();
   my_func(&x);
-  let y = &x; // Sure!
-  // let y = x; Panic!
-}
+  let z = &x; // Sure!
+  let y = x; // cannot move out of `x` because it is borrowed
+  }
 ```
 
 ---
@@ -139,27 +163,37 @@ fn main() {
 
 ---
 
-Let's look at some more code!
+# Let's look at some more code!
 
 ```rust
-// Ruby style iterators
-(1..100).iter().map(|i| i * 2).collect();
+// Functional style iterators
+let vec = vec![1,2,3];
+vec.iter().map(|i| i * 2).collect::<Vec<i32>>();
+
 // Immutable by default
 let x = 1;
+
 // x = x + 1 panic!
 let mut y = 1;
-y = y + 1
+y = y + 1;
 
-// Error and Option types
-error_happy_function -> Result<value_type, error_type>
-gamble -> Option<value_type>
+// Macros end in a bang
+println!("Hello world");
+
+// Option and result types throughout the STD
+fn maybe() -> Option<MyType>
+fn ok_or_error() -> Result<Ok, Error>
 ```
 
 ---
 
+class: center, middle
+
 # MONADS!
 
 ---
+
+class: center, middle
 
 Result and Option are used in Rust for exception and nil handling
 
@@ -182,7 +216,7 @@ fn first_room() -> Option<HotelRoom> {
 # Using a Result with pattern matching
 
 ```rust
-fn divide(num: f64, denom: f64) -> Result<f64, &str> {
+fn divide(num: f64, denom: f64) -> Result<f64, &'static str> {
   match denom {
     0.0 => Error(“Division by zero”),
     _   => Ok(num / denom)
@@ -192,8 +226,9 @@ fn divide(num: f64, denom: f64) -> Result<f64, &str> {
 
 ---
 
-Results and Option often form the core of your code. Many tools to make this super
-elegant!
+class: center, middle
+
+# Results and Option often form the core of your code. Many tools to make this super elegant!
 
 ---
 
@@ -205,9 +240,13 @@ elegant!
 
 ---
 
-Biggest rust project is Servo
+class: center, middle
+
+# Biggest rust project is Servo
 
 ---
+
+class: center, middle
 
 ![Servo performance](./servo.jpe)
 
